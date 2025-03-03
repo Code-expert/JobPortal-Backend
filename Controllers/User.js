@@ -6,59 +6,57 @@ import cloudinary from '../Connection/cloudinary.js';
 
 // REGISTER USER
 export const register = async (req, res) => {
-  try {
-    const { Fullname, Email, PhoneNumber, Password, Role } = req.body;
-    if (!Fullname || !Email || !PhoneNumber || !Password || !Role) {
-      return res.status(400).json({
-        message: "Something is missing",
+    try {
+      const { Fullname, Email, PhoneNumber, Password, Role } = req.body;
+      if (!Fullname || !Email || !PhoneNumber || !Password || !Role) {
+        return res.status(400).json({
+          message: "Something is missing",
+          success: false,
+        });
+      }
+  
+      const existingUser = await User.findOne({ Email });
+      if (existingUser) {
+        return res.status(400).json({
+          message: "User already exists with this Email",
+          success: false,
+        });
+      }
+  
+      let profilePhotoUrl = ""; // Default empty profile photo
+  
+      // Check if a file was uploaded
+      if (req.file) {
+        const fileUri = getDataUri(req.file);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        profilePhotoUrl = cloudResponse.secure_url;
+      }
+  
+      const hashedPassword = await bcrypt.hash(Password, 10);
+      await User.create({
+        Fullname,
+        Email,
+        PhoneNumber,
+        Password: hashedPassword,
+        Role,
+        Profile: {
+          ProfilePhoto: profilePhotoUrl, // Will be empty if no file was uploaded
+        },
+      });
+  
+      return res.status(201).json({
+        message: "Account created Successfully",
+        success: true,
+      });
+    } catch (error) {
+      console.log("Registration Error", error);
+      return res.status(500).json({
+        message: "Server Error",
         success: false,
       });
     }
-
-    // Check if file was uploaded (for profile photo)
-    const file = req.file;
-    if (!file) {
-      return res.status(400).json({
-        message: "Profile photo is required",
-        success: false,
-      });
-    }
-
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-
-    const existingUser = await User.findOne({ Email });
-    if (existingUser) {
-      return res.status(400).json({
-        message: "User already exists with this Email",
-        success: false,
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(Password, 10);
-    await User.create({
-      Fullname,
-      Email,
-      PhoneNumber,
-      Password: hashedPassword,
-      Role,
-      Profile: {
-        ProfilePhoto: cloudResponse.secure_url,
-      },
-    });
-
-    return res.status(201).json({
-      message: "Account created Successfully",
-      success: true,
-    });
-  } catch (error) {
-    console.log("Registration Error", error);
-    return res.status(500).json({
-      message: "Server Error",
-      success: false,
-    });
-  }
-};
+  };
+  
 
 export const login = async (req, res) => {
   try {
