@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 const corsOptions = {
-  origin: ["http://localhost:5173"], // Allow frontend domain
+  origin: ["https://job-portal-196k.vercel.app/"], // Allow frontend domain
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, // Allow cookies
 };
