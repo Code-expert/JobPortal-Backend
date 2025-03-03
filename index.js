@@ -15,11 +15,11 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 const corsOptions = {
-  origin: 'https://jobifyhub.vercel.app', // Your frontend URL
-  credentials: true,
+  origin: "https://jobifyhub.vercel.app",
+  credentials: true, // Ensure cookies are sent
+  methods: ["GET", "POST", "PUT", "DELETE"], 
+  allowedHeaders: ["Content-Type", "Authorization"], 
 };
-
-
 app.use(cors(corsOptions));
 
 
@@ -33,11 +33,6 @@ app.use('/api/v1/application',applicationRouter);
 app.get('/',(req,res)=>{
   res.send('Welcome to Job Portal');
 })
-
-
-
-
-
 
 app.listen(PORT, () => {
   mongoDb();
