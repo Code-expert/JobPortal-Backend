@@ -15,11 +15,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 const corsOptions = {
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
-  }
+  origin: 'https://jobifyhub.vercel.app', // Your frontend URL
+  credentials: true,
 };
+
 
 app.use(cors(corsOptions));
 
