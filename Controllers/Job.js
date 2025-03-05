@@ -15,7 +15,7 @@ export const createJob = async (req, res) => {
             title,
             description,
             requirement:requirement.split(","),
-            salary:Number(salary),
+            salary:String(salary),
             ExperienceLevel,
             location,
             jobtype,

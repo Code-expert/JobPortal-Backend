@@ -9,6 +9,14 @@ import jobRouter from './Routes/Job.js';
 import applicationRouter from './Routes/Application.js';
 dotenv.config({});
 const app = express();
+import path from 'path';
+
+// Serve frontend routes correctly
+app.use(express.static("client/dist")); // Update with your build path if needed
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve("client", "
+
 
 //Middlewares...
 app.use(express.json());
