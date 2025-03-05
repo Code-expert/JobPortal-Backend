@@ -11,12 +11,12 @@ dotenv.config({});
 const app = express();
 import path from 'path';
 
-// Serve frontend routes correctly
-app.use(express.static("client/dist")); // Update with your build path if needed
+// Serve frontend
+app.use(express.static("client/dist"));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve("client", "
-
+  res.sendFile(path.resolve("client", "dist", "index.html"));
+});
 
 //Middlewares...
 app.use(express.json());
